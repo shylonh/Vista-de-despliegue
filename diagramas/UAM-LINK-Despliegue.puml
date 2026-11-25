@@ -1,0 +1,36 @@
+@startuml
+title UAM LINK - 01 - Arquitectura objetivo propuesta
+top to bottom direction
+skinparam componentStyle uml2
+skinparam shadowing false
+note "PROPUESTA: API, base de datos y correo pendientes de implementar; basada en la viabilidad tecnica de UAM LINK." as Alcance
+node "Dispositivo del usuario" as client <<device>> {
+node "Navegador web" as browser <<executionEnvironment>> {
+component "Interfaz UAM LINK" as ui
+}
+}
+node "Servidor de aplicacion" as app <<device>> {
+node "Node.js + servidor HTTPS" as node <<executionEnvironment>> {
+artifact "uam-link-web.zip" as web
+artifact "uam-link-api.zip" as apiart
+component "API UAM LINK" as api
+}
+}
+node "Servidor de datos" as db <<device>> {
+node "MySQL" as mysql <<executionEnvironment>> {
+artifact "uam-link-schema.sql" as sql
+component "Persistencia UAM LINK" as persistence
+}
+}
+node "Servidor de correo" as mail <<device>> {
+node "Servicio SMTP" as smtp <<executionEnvironment>>
+}
+note "Modulos de la API: usuarios y permisos; solicitudes y citas; atenciones y validacion docente; reportes y notificaciones." as modules
+note "Linea continua: camino de comunicacion. Flecha discontinua «manifest»: el artefacto materializa el componente.\nAnidamiento: artefacto o componente desplegado dentro de su entorno. GitHub conserva esta entrega y su historial." as legend
+client -- app : HTTPS / TCP 443\nHTML, CSS, JS y API JSON
+app -- db : MySQL / TCP 3306\nTLS - red privada
+app -- mail : SMTP / TCP 587\nSTARTTLS
+web ..> ui : <<manifest>>
+apiart ..> api : <<manifest>>
+sql ..> persistence : <<manifest>>
+@enduml
