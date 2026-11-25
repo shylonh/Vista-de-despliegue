@@ -1,5 +1,0 @@
-*.lck
-*.ldb
-*.bak
-__pycache__/
-.env
